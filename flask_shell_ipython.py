@@ -9,8 +9,10 @@ from flask.cli import with_appcontext
 @click.command()
 @with_appcontext
 def shell():
-    """Runs an interactive Python shell in the context of a given
-    Flask application.  The application will populate the default
+    """Runs a shell in the app context.
+
+    Runs an interactive Python shell in the context of a given
+    Flask application. The application will populate the default
     namespace of this shell according to it's configuration.
     This is useful for executing small snippets of management code
     without having to manually configuring the application.
