@@ -10,7 +10,7 @@ setup(
     install_requires=[
         'flask>=0.11',
         'click',
-        'IPython',
+        'IPython>=5.0.0',
     ],
     entry_points={
         'flask.commands': [

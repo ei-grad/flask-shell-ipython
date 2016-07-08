@@ -1,4 +1,3 @@
-import os
 import sys
 
 import click
@@ -28,14 +27,4 @@ def shell():
         app.debug and ' [debug]' or '',
         app.instance_path,
     )
-    ctx = {}
-
-    # Support the regular Python interpreter startup script if someone
-    # is using it.
-    startup = os.environ.get('PYTHONSTARTUP')
-    if startup and os.path.isfile(startup):
-        with open(startup, 'r') as f:
-            eval(compile(f.read(), startup, 'exec'), ctx)
-
-    ctx.update(app.make_shell_context())
-    IPython.embed(config=IPython.Config(), banner1=banner, user_ns=ctx)
+    IPython.embed(banner1=banner, user_ns=app.make_shell_context())
