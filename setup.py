@@ -5,7 +5,7 @@ setup(
     author_email="andrew@ei-grad.ru",
     description="Replace default `flask shell` command by similar command running IPython.",
     url="http://github.com/ei-grad/flask-shell-ipython",
-    version="0.2.0",
+    version="0.2.1",
     py_modules=['flask_shell_ipython'],
     install_requires=[
         'flask>=0.11',
