@@ -1,8 +1,6 @@
-import os
 import sys
 
 import click
-
 from flask.cli import with_appcontext
 
 
@@ -31,13 +29,7 @@ def shell():
 
     ctx = {}
 
-    # Support the regular Python interpreter startup script if someone
-    # is using it.
-    startup = os.environ.get('PYTHONSTARTUP')
-    if startup and os.path.isfile(startup):
-        with open(startup, 'r') as f:
-            eval(compile(f.read(), startup, 'exec'), ctx)
-
     ctx.update(app.make_shell_context())
 
-    IPython.embed(banner1=banner, user_ns=ctx)
+    IPython.start_ipython(argv=app.config.get('IPYTHON_ARGV', []),
+                          banner1=banner, user_ns=ctx, config=app.config.get('IPYTHON_CONFIG'))
