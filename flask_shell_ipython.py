@@ -4,9 +4,10 @@ import click
 from flask.cli import with_appcontext
 
 
-@click.command()
+@click.command(context_settings=dict(ignore_unknown_options=True))
+@click.argument('ipython_args', nargs=-1, type=click.UNPROCESSED)
 @with_appcontext
-def shell():
+def shell(ipython_args):
     """Runs a shell in the app context.
 
     Runs an interactive Python shell in the context of a given
@@ -31,5 +32,5 @@ def shell():
 
     ctx.update(app.make_shell_context())
 
-    IPython.start_ipython(argv=app.config.get('IPYTHON_ARGV', []),
-                          banner1=banner, user_ns=ctx, config=app.config.get('IPYTHON_CONFIG'))
+    IPython.start_ipython(argv=ipython_args, banner1=banner, user_ns=ctx,
+                          config=app.config.get('IPYTHON_CONFIG'))
