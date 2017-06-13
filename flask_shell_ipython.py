@@ -17,8 +17,12 @@ def shell(ipython_args):
     without having to manually configuring the application.
     """
     import IPython
+    from IPython.terminal.ipapp import load_default_config
     from flask.globals import _app_ctx_stack
     app = _app_ctx_stack.top.app
+    ctx = {}
+    ctx.update(app.make_shell_context())
+
     banner = 'Python %s on %s\nIPython: %s\nApp: %s%s\nInstance: %s\n' % (
         sys.version,
         sys.platform,
@@ -27,10 +31,7 @@ def shell(ipython_args):
         app.debug and ' [debug]' or '',
         app.instance_path,
     )
+    config = app.config.get('IPYTHON_CONFIG') or load_default_config()
+    config.TerminalInteractiveShell.banner1 = banner
 
-    ctx = {}
-
-    ctx.update(app.make_shell_context())
-
-    IPython.start_ipython(argv=ipython_args, banner1=banner, user_ns=ctx,
-                          config=app.config.get('IPYTHON_CONFIG'))
+    IPython.start_ipython(argv=ipython_args, user_ns=ctx, config=config)
