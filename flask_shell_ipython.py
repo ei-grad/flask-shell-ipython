@@ -32,7 +32,10 @@ def shell(ipython_args):
         app.debug and ' [debug]' or '',
         app.instance_path,
     )
-    config = Config(app.config.get('IPYTHON_CONFIG')) or load_default_config()
+    if 'IPYTHON_CONFIG' in app.config:
+        config = Config(app.config['IPYTHON_CONFIG'])
+    else:
+        config = load_default_config()
     config.TerminalInteractiveShell.banner1 = banner
 
     IPython.start_ipython(argv=ipython_args, user_ns=ctx, config=config)
