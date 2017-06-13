@@ -18,6 +18,7 @@ def shell(ipython_args):
     """
     import IPython
     from IPython.terminal.ipapp import load_default_config
+    from traitlets.config.loader import Config
     from flask.globals import _app_ctx_stack
     app = _app_ctx_stack.top.app
     ctx = {}
@@ -31,7 +32,7 @@ def shell(ipython_args):
         app.debug and ' [debug]' or '',
         app.instance_path,
     )
-    config = app.config.get('IPYTHON_CONFIG') or load_default_config()
+    config = Config(app.config.get('IPYTHON_CONFIG')) or load_default_config()
     config.TerminalInteractiveShell.banner1 = banner
 
     IPython.start_ipython(argv=ipython_args, user_ns=ctx, config=config)
