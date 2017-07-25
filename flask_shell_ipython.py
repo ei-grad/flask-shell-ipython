@@ -1,14 +1,13 @@
-import os
 import sys
 
 import click
-
 from flask.cli import with_appcontext
 
 
-@click.command()
+@click.command(context_settings=dict(ignore_unknown_options=True))
+@click.argument('ipython_args', nargs=-1, type=click.UNPROCESSED)
 @with_appcontext
-def shell():
+def shell(ipython_args):
     """Runs a shell in the app context.
 
     Runs an interactive Python shell in the context of a given
@@ -18,8 +17,13 @@ def shell():
     without having to manually configuring the application.
     """
     import IPython
+    from IPython.terminal.ipapp import load_default_config
+    from traitlets.config.loader import Config
     from flask.globals import _app_ctx_stack
     app = _app_ctx_stack.top.app
+    ctx = {}
+    ctx.update(app.make_shell_context())
+
     banner = 'Python %s on %s\nIPython: %s\nApp: %s%s\nInstance: %s\n' % (
         sys.version,
         sys.platform,
@@ -28,16 +32,10 @@ def shell():
         app.debug and ' [debug]' or '',
         app.instance_path,
     )
+    if 'IPYTHON_CONFIG' in app.config:
+        config = Config(app.config['IPYTHON_CONFIG'])
+    else:
+        config = load_default_config()
+    config.TerminalInteractiveShell.banner1 = banner
 
-    ctx = {}
-
-    # Support the regular Python interpreter startup script if someone
-    # is using it.
-    startup = os.environ.get('PYTHONSTARTUP')
-    if startup and os.path.isfile(startup):
-        with open(startup, 'r') as f:
-            eval(compile(f.read(), startup, 'exec'), ctx)
-
-    ctx.update(app.make_shell_context())
-
-    IPython.embed(banner1=banner, user_ns=ctx)
+    IPython.start_ipython(argv=ipython_args, user_ns=ctx, config=config)
