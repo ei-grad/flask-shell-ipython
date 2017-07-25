@@ -20,22 +20,26 @@ def shell(ipython_args):
     from IPython.terminal.ipapp import load_default_config
     from traitlets.config.loader import Config
     from flask.globals import _app_ctx_stack
-    app = _app_ctx_stack.top.app
-    ctx = {}
-    ctx.update(app.make_shell_context())
 
-    banner = 'Python %s on %s\nIPython: %s\nApp: %s%s\nInstance: %s\n' % (
-        sys.version,
-        sys.platform,
-        IPython.__version__,
-        app.import_name,
-        app.debug and ' [debug]' or '',
-        app.instance_path,
-    )
+    app = _app_ctx_stack.top.app
+
     if 'IPYTHON_CONFIG' in app.config:
         config = Config(app.config['IPYTHON_CONFIG'])
     else:
         config = load_default_config()
-    config.TerminalInteractiveShell.banner1 = banner
 
-    IPython.start_ipython(argv=ipython_args, user_ns=ctx, config=config)
+    config.TerminalInteractiveShell.banner1 = '''Python %s on %s
+IPython: %s
+App: %s%s
+Instance: %s''' % (sys.version,
+                   sys.platform,
+                   IPython.__version__,
+                   app.import_name,
+                   app.debug and ' [debug]' or '',
+                   app.instance_path)
+
+    IPython.start_ipython(
+        argv=ipython_args,
+        user_ns=app.make_shell_context(),
+        config=config,
+    )
