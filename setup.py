@@ -7,7 +7,7 @@ setup(
     long_description=open("README.md").read(),
     long_description_content_type='text/markdown',
     url="http://github.com/ei-grad/flask-shell-ipython",
-    version="0.4.0",
+    version="0.4.1",
     py_modules=['flask_shell_ipython'],
     install_requires=[
         'flask>=1.0',
