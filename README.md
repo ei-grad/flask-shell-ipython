@@ -7,6 +7,7 @@ Replace default `flask shell` command by similar command running IPython.
 Just install:
 
     pip install flask-shell-ipython
+    pip install flask-login
 
 And here are you go:
 
