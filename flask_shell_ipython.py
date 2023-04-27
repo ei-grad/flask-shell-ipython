@@ -30,12 +30,13 @@ def shell(ipython_args):
 
     config.TerminalInteractiveShell.banner1 = '''Python %s on %s
 IPython: %s
-App: %s [%s]
+App: %s
+Debug: %s
 Instance: %s''' % (sys.version,
                    sys.platform,
                    IPython.__version__,
                    app.import_name,
-                   app.env,
+                   app.debug,
                    app.instance_path)
 
     IPython.start_ipython(
