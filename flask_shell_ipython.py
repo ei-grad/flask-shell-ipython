@@ -28,8 +28,7 @@ def shell(ipython_args):
 
     config.TerminalInteractiveShell.banner1 = f"""Python {sys.version} on {sys.platform}
 IPython: {IPython.__version__}
-App: {app.import_name}
-Debug: {app.debug}
+App: {app.import_name}{' [debug]' if app.debug else ''}
 Instance: {app.instance_path}
 """
 
