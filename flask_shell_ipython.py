@@ -5,7 +5,7 @@ from flask.cli import with_appcontext
 
 
 @click.command(context_settings=dict(ignore_unknown_options=True))
-@click.argument('ipython_args', nargs=-1, type=click.UNPROCESSED)
+@click.argument("ipython_args", nargs=-1, type=click.UNPROCESSED)
 @with_appcontext
 def shell(ipython_args):
     """Runs a shell in the app context.
@@ -21,21 +21,17 @@ def shell(ipython_args):
     from traitlets.config.loader import Config
     from flask.globals import current_app as app
 
-    if 'IPYTHON_CONFIG' in app.config:
-        config = Config(app.config['IPYTHON_CONFIG'])
+    if "IPYTHON_CONFIG" in app.config:
+        config = Config(app.config["IPYTHON_CONFIG"])
     else:
         config = load_default_config()
 
-    config.TerminalInteractiveShell.banner1 = '''Python %s on %s
-IPython: %s
-App: %s
-Debug: %s
-Instance: %s''' % (sys.version,
-                   sys.platform,
-                   IPython.__version__,
-                   app.import_name,
-                   app.debug,
-                   app.instance_path)
+    config.TerminalInteractiveShell.banner1 = f"""Python {sys.version} on {sys.platform}
+IPython: {IPython.__version__}
+App: {app.import_name}
+Debug: {app.debug}
+Instance: {app.instance_path}
+"""
 
     IPython.start_ipython(
         argv=ipython_args,

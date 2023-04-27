@@ -1,0 +1,2 @@
+pytest
+pytest-forked; platform_system != "Windows"

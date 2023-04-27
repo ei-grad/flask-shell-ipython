@@ -9,8 +9,9 @@ setup(
     url="http://github.com/ei-grad/flask-shell-ipython",
     version="0.4.1",
     py_modules=['flask_shell_ipython'],
+    python_requires=">=3.6, <4",
     install_requires=[
-        'flask>=1.0',
+        'Flask>=1.0',
         'click',
         'IPython>=5.0.0',
     ],
@@ -26,7 +27,6 @@ setup(
         'Framework :: IPython',
         'Intended Audience :: Developers',
         'License :: OSI Approved :: MIT License',
-        'Programming Language :: Python :: 2',
         'Programming Language :: Python :: 3',
     ]
 )
