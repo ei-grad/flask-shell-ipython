@@ -19,9 +19,7 @@ def shell(ipython_args):
     import IPython
     from IPython.terminal.ipapp import load_default_config
     from traitlets.config.loader import Config
-    from flask.globals import _app_ctx_stack
-
-    app = _app_ctx_stack.top.app
+    from flask.globals import current_app as app
 
     if 'IPYTHON_CONFIG' in app.config:
         config = Config(app.config['IPYTHON_CONFIG'])
