@@ -15,6 +15,8 @@ jobs:
       run: pip install build
     - name: Build distribution
       run: python -m build .
+    - name: File list
+      run: tar tf dist/*.tar.gz && unzip -l dist/*.whl
     - name: Upload artifacts
       uses: actions/upload-artifact@v4
       with:
