@@ -1,26 +1,27 @@
 [build-system]
-requires = ["hatchling"]
+requires = ["hatchling==1.25.0"]
 build-backend = "hatchling.build"
 
 [project]
 name = "flask-shell-ipython"
-version = "0.5.2.post1"
+version = "0.5.2.post2"
 description = "Replace default `flask shell` command by similar command running IPython."
 readme = "README.md"
 readme-content-type = "text/markdown"
-requires-python = ">=3.6"
-license = { file = "LICENSE" }
+requires-python = ">=3.8, <4.0"
+license = "MIT"
+# expect `license-files` field to break on any new version of hatch, because
+# PEP-639 is already changed from this structure as of the time of writing
+license-files = { paths = ["LICENSE"] }
 authors = [
     { name = "Andrew Grigorev", email = "andrew@ei-grad.ru" }
 ]
-homepage = "https://github.com/ei-grad/flask-shell-ipython"
 classifiers = [
     "Development Status :: 5 - Production/Stable",
     "Environment :: Console",
     "Framework :: Flask",
     "Framework :: IPython",
     "Intended Audience :: Developers",
-    "License :: OSI Approved :: MIT License",
     "Programming Language :: Python :: 3",
 ]
 
@@ -30,5 +31,13 @@ dependencies = [
     "IPython>=5.0.0"
 ]
 
+[project.urls]
+Home = "https://github.com/ei-grad/flask-shell-ipython"
+
 [project.entry-points."flask.commands"]
 shell = "flask_shell_ipython:shell"
+
+[tool.hatch.build.targets.sdist]
+exclude = [
+  ".github",
+]
