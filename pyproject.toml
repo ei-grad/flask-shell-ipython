@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "flask-shell-ipython"
-version = "0.5.2.post2"
+version = "0.5.2.post3"
 description = "Replace default `flask shell` command by similar command running IPython."
 readme = "README.md"
 readme-content-type = "text/markdown"
@@ -32,7 +32,7 @@ dependencies = [
 ]
 
 [project.urls]
-Home = "https://github.com/ei-grad/flask-shell-ipython"
+Homepage = "https://github.com/ei-grad/flask-shell-ipython"
 
 [project.entry-points."flask.commands"]
 shell = "flask_shell_ipython:shell"
