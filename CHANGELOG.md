@@ -2,19 +2,23 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.5.4] - 2024-09-10
+### Packaging
+- Check consistency between tag version and `pyproject.toml` version.
+- Added extraction of changelog content for release notes from `CHANGELOG.md`.
+- Switched to `actions/attest-build-provenance@v1` from `gh-action-sigstore-python`.
+
 ## [0.5.3] - 2024-09-06
-### Fixed
+### Packaging
 - Updated `gh-action-sigstore-python` version to `v3.0.0` in GitHub Actions workflow.
 
 ## [0.5.2] - 2024-09-05
-### Added
+### Packaging
 - Migrated to `pyproject.toml` and Hatchling build system.
-- Added support for Python 3.12 and 3.13.0-rc.1 in the test matrix.
+- Added Python 3.12 and 3.13.0-rc.1 to the test matrix.
 - Updated CI workflows and actions to the latest versions.
 - Enabled attestations for publishing.
 - Added publishing to Test PyPI and GitHub releases.
-  
-### Removed
 - Dropped support for Python 3.6 and 3.7 due to end-of-life.
 
 ## [0.5.1] - 2023-04-27
@@ -25,6 +29,7 @@ All notable changes to this project will be documented in this file.
 ## [0.5.0] - 2023-04-27
 ### Added
 - Implemented a new release format and workflow.
+- Drop Python 2.x support.
 - Updated dependencies in `setup.py`.
 
 ## [0.4.1] - 2022-05-06
