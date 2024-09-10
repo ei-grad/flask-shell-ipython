@@ -2,7 +2,7 @@
 
 All notable changes to this project will be documented in this file.
 
-## [0.5.4] - 2024-09-10
+## [0.5.4rc1] - 2024-09-10
 ### Packaging
 - Check consistency between tag version and `pyproject.toml` version.
 - Added extraction of changelog content for release notes from `CHANGELOG.md`.

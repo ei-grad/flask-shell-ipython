@@ -75,7 +75,7 @@ jobs:
   github-release:
     name: Release on GitHub
     needs: test
-    if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags/v')
+    if: github.event_name == 'push' && startsWith(github.ref, 'refs/heads/test-v')
     runs-on: ubuntu-latest
     environment:
       name: GitHub
@@ -87,7 +87,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Extract Version from Tag
-        run: echo "VERSION_FROM_GIT_REF=${GITHUB_REF#refs/tags/v}" >> $GITHUB_ENV
+        run: echo "VERSION_FROM_GIT_REF=${GITHUB_REF#refs/heads/test-v}" >> $GITHUB_ENV
       - name: Extract Version from pyproject.toml
         run: |
           pip install toml
