@@ -71,7 +71,6 @@ jobs:
         uses: pypa/gh-action-pypi-publish@release/v1
         with:
           repository-url: "https://test.pypi.org/legacy/"
-          attestations: true
 
   github-release:
     name: Release on GitHub
@@ -82,36 +81,68 @@ jobs:
       name: GitHub
       url: "https://github.com/ei-grad/flask-shell-ipython/releases/"
     permissions:
-      contents: write  # IMPORTANT: mandatory for making GitHub Releases
-      id-token: write  # IMPORTANT: mandatory for sigstore
+      attestations: write
+      contents: write
+      id-token: write
     steps:
+      - uses: actions/checkout@v4
+      - name: Extract Version from Tag
+        run: echo "VERSION_FROM_GIT_REF=${GITHUB_REF#refs/tags/v}" >> $GITHUB_ENV
+      - name: Extract Version from pyproject.toml
+        run: |
+          pip install toml
+          VERSION_FROM_PYPROJECT=$(python << EOF
+          import toml
+          print(toml.load('pyproject.toml')['project']['version'])
+          EOF
+          )
+          echo "VERSION_FROM_PYPROJECT=$VERSION_FROM_PYPROJECT" >> $GITHUB_ENV
+      - name: Ensure version consistency
+        run: |
+          if [ "$VERSION_FROM_GIT_REF" != "$VERSION_FROM_PYPROJECT" ]; then
+            echo "Error: Version from tag ($VERSION_FROM_GIT_REF) does not match version in pyproject.toml ($VERSION_FROM_PYPROJECT)"
+            exit 1
+          fi
+          echo VERSION=$VERSION_FROM_GIT_REF >> $GITHUB_ENV
+      - name: Extract changelog for release notes
+        run: |
+          (
+            echo "CHANGELOG<<EOF"
+            awk -v version="$VERSION" '{
+                if ($0 ~ "^## \\[" version "\\]") inSection = 1;
+                else if ($0 ~ "^## \\[" && inSection) inSection = 0;
+                if (inSection) print $0;
+            }' CHANGELOG.md
+            echo "EOF"
+          ) >> $GITHUB_ENV
+      - name: Validate changelog content
+        run: |
+          if [ -z "$CHANGELOG" ] ; then
+            echo "Missing CHANGELOG.md section for release $VERSION"
+            exit 1
+          fi
       - name: Download artifacts
         uses: actions/download-artifact@v4
-      - name: Sign the dists with Sigstore
-        uses: sigstore/gh-action-sigstore-python@v3.0.0
+      - name: Attest build provenance
+        uses: actions/attest-build-provenance@v1
         with:
-          inputs: >-
-            ./dist/*.tar.gz
-            ./dist/*.whl
+          subject-path: dist/*
       - name: Create GitHub Release
         env:
           GITHUB_TOKEN: ${{ github.token }}
         run: >-
-          gh release create
-          '${{ github.ref_name }}'
-          --repo '${{ github.repository }}'
-          --generate-notes
+          gh release create "$VERSION"
+          --draft
+          --notes "$CHANGELOG"
       - name: Upload artifact signatures to GitHub Release
         env:
           GITHUB_TOKEN: ${{ github.token }}
         run: >-
-          gh release upload
-          '${{ github.ref_name }}' dist/**
-          --repo '${{ github.repository }}'
+          gh release upload "$VERSION" dist/**
 
   pypi-publish:
     name: Release on PyPI
-    needs: test
+    needs: github-release
     if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags/v')
     runs-on: ubuntu-latest
     environment:
@@ -124,5 +155,3 @@ jobs:
         uses: actions/download-artifact@v4
       - name: Publish package distributions to PyPI
         uses: pypa/gh-action-pypi-publish@release/v1
-        with:
-          attestations: true

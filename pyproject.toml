@@ -33,6 +33,7 @@ dependencies = [
 
 [project.urls]
 Homepage = "https://github.com/ei-grad/flask-shell-ipython"
+Changelog = "https://github.com/ei-grad/flask-shell-ipython/blob/main/CHANGELOG.md"
 
 [project.entry-points."flask.commands"]
 shell = "flask_shell_ipython:shell"
